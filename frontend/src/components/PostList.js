@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
 import { AiOutlineEdit } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const dataset = [
   { _id: "11", title: "qwqqw", description: "werwerwrwe" },
@@ -19,7 +20,9 @@ function PostList() {
     <>
       <Container className="mt-5">
         <Button size="lg" variant="success">
-          Create Post <BsPlusCircleFill></BsPlusCircleFill>
+          <Link to={"/create"} style={{textDecoration: "none", color: "white"}} >
+            Create Post <BsPlusCircleFill></BsPlusCircleFill>
+          </Link>
         </Button>
 
         <Row className="mt-3" sm={1} md={3}>
@@ -32,10 +35,16 @@ function PostList() {
                       <Card.Title>{post.title}</Card.Title>
                     </Col>
                     <Col>
+                      <Link to={`/update/${post._id}`}>
                       <AiOutlineEdit className="text-primary" role="button" />
+                      </Link>
                     </Col>
                     <Col>
-                      <AiFillDelete className="text-danger" role="button" onClick={() => {}} />
+                      <AiFillDelete
+                        className="text-danger"
+                        role="button"
+                        onClick={() => {}}
+                      />
                     </Col>
                   </Row>
                   <Card.Text>{post.description}</Card.Text>
