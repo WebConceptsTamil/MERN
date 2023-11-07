@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
+import { Link } from "react-router-dom";
 
 function UpdatePost({ id }) {
   return (
@@ -39,7 +40,9 @@ function UpdatePost({ id }) {
               </Form.Group>
 
               <Button variant="dark" type="button">
+                <Link to={"/"} className="text-decoration-none text-white">
                 Cancel
+                </Link>
               </Button>
 
               <Button variant="success" type="submit" className="mx-2">
