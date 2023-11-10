@@ -3,7 +3,7 @@ import Post from "../model/postModel.js";
 // GET POSTS
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).select('-__v');
     console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
