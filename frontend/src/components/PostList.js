@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,26 +8,46 @@ import { BsPlusCircleFill } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
 import { AiOutlineEdit } from "react-icons/ai";
 import { Link } from "react-router-dom";
-
-const dataset = [
-  { _id: "11", title: "qwqqw", description: "werwerwrwe" },
-  { _id: "22", title: "sdfgsdf", description: "fghrtyertetert" },
-  { _id: "33", title: "sdfgsdf", description: "fghrtyertetert" },
-  { _id: "44", title: "sdfgsdf", description: "fghrtyertetert" },
-];
+import LoadingSpinner from "./LoadingSpinner";
 
 function PostList() {
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getPosts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:5000/api/posts");
+      const data = await response.json();
+      setPosts(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   return (
     <>
       <Container className="mt-5">
         <Button size="lg" variant="success">
-          <Link to={"/create"} style={{textDecoration: "none", color: "white"}} >
+          <Link
+            to={"/create"}
+            style={{ textDecoration: "none", color: "white" }}
+          >
             Create Post <BsPlusCircleFill></BsPlusCircleFill>
           </Link>
         </Button>
 
         <Row className="mt-3" sm={1} md={3}>
-          {dataset.map((post) => (
+          {isLoading && <LoadingSpinner />}
+
+          {!isLoading && posts.map((post) => (
             <Col key={post._id}>
               <Card className="mb-2">
                 <Card.Body>
@@ -36,7 +57,7 @@ function PostList() {
                     </Col>
                     <Col>
                       <Link to={`/update/${post._id}`}>
-                      <AiOutlineEdit className="text-primary" role="button" />
+                        <AiOutlineEdit className="text-primary" role="button" />
                       </Link>
                     </Col>
                     <Col>
