@@ -4,9 +4,48 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 
 function AddPost() {
+  const navigate = useNavigate()
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    if (!title) {
+      alert("Please enter title");
+      return;
+    }
+
+    if (!description) {
+      alert("Please enter description");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:5000/api/createpost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description }),
+      });
+      if(response.ok){
+        navigate("/")
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      setTitle("")
+      setDescription("")
+    }
+  };
+
   return (
     <Container className="mt-5">
       <Row className="mt-3">
@@ -17,13 +56,13 @@ function AddPost() {
         >
           <h1 className="display-6 text-center mb-3">Create Post</h1>
 
-          <Form onSubmit={() => {}}>
+          <Form onSubmit={onSubmitHandler}>
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
               <Form.Control
                 type="title"
-                value=""
-                onChange={(e) => {}}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="enter title"
               />
             </Form.Group>
@@ -34,8 +73,8 @@ function AddPost() {
                 as="textarea"
                 placeholder="enter description"
                 rows={3}
-                value=""
-                onChange={(e) => {}}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
 
@@ -45,20 +84,24 @@ function AddPost() {
               </Link>
             </Button>
 
-            <Button type="submit" className="mx-2">
-              Create
-            </Button>
+            {!loading && (
+              <Button type="submit" className="mx-2">
+                Create
+              </Button>
+            )}
 
-            <Button variant="primary" className="mx-2" disabled>
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              Loading...
-            </Button>
+            {loading && (
+              <Button variant="primary" className="mx-2" disabled>
+                <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                Loading...
+              </Button>
+            )}
           </Form>
         </Col>
       </Row>
