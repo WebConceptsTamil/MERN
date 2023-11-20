@@ -20,11 +20,31 @@ function PostList() {
       const response = await fetch("http://localhost:5000/api/posts");
       const data = await response.json();
       setPosts(data);
-      console.log(data);
     } catch (error) {
       console.log(error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const deletePost = async (id) => {
+    const confirmation = window.confirm("Are you sure to delete ?");
+    if (!confirmation) {
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/deletepost/${id}`,
+        { method: "DELETE" }
+      );
+      if (response.ok) {
+        await getPosts();
+      } else {
+        const errResponse = await response.json();
+        throw new Error(errResponse.message);
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -47,32 +67,37 @@ function PostList() {
         <Row className="mt-3" sm={1} md={3}>
           {isLoading && <LoadingSpinner />}
 
-          {!isLoading && posts.map((post) => (
-            <Col key={post._id}>
-              <Card className="mb-2">
-                <Card.Body>
-                  <Row className="mb-2">
-                    <Col xs={8} md={7} lg={8}>
-                      <Card.Title>{post.title}</Card.Title>
-                    </Col>
-                    <Col>
-                      <Link to={`/update/${post._id}`}>
-                        <AiOutlineEdit className="text-primary" role="button" />
-                      </Link>
-                    </Col>
-                    <Col>
-                      <AiFillDelete
-                        className="text-danger"
-                        role="button"
-                        onClick={() => {}}
-                      />
-                    </Col>
-                  </Row>
-                  <Card.Text>{post.description}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+          {!isLoading && posts.length > 0 &&
+            posts.map((post) => (
+              <Col key={post._id}>
+                <Card className="mb-2">
+                  <Card.Body>
+                    <Row className="mb-2">
+                      <Col xs={8} md={7} lg={8}>
+                        <Card.Title>{post.title}</Card.Title>
+                      </Col>
+                      <Col>
+                        <Link to={`/update/${post._id}`}>
+                          <AiOutlineEdit
+                            className="text-primary"
+                            role="button"
+                          />
+                        </Link>
+                      </Col>
+                      <Col>
+                        <AiFillDelete
+                          className="text-danger"
+                          role="button"
+                          onClick={() => deletePost(post._id)}
+                        />
+                      </Col>
+                    </Row>
+                    <Card.Text>{post.description}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+            {!isLoading && posts.length === 0 && <h3 className="text-center display-6" >No post to display</h3>}
         </Row>
       </Container>
     </>
