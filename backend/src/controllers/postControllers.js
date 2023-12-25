@@ -3,12 +3,12 @@ import Post from "../model/postModel.js";
 // GET POSTS
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find({}).select('-__v');
+    const posts = await Post.find({}).select("-__v");
     console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: message.error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -30,9 +30,8 @@ const createPost = async (req, res) => {
 const getSinglePost = async (req, res) => {
   const { id } = req.params;
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(id).select("-__v");
     if (!post) {
-      res.status(404);
       return res.status(404).json({ message: "Post Not Found" });
     }
     res.status(200).json({ post });
@@ -40,7 +39,7 @@ const getSinglePost = async (req, res) => {
     if (error.name === "CastError" && error.kind === "ObjectId") {
       return res.status(400).json({ message: "Invalid post ID" });
     }
-    res.status(500).json({ message: message.error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -50,7 +49,6 @@ const updatePost = async (req, res) => {
   try {
     const post = await Post.findById(id);
     if (!post) {
-      res.status(404);
       return res.status(404).json({ message: "Post Not Found" });
     }
     post.title = req.body.title || post.title;
@@ -65,7 +63,7 @@ const updatePost = async (req, res) => {
     if (error.name === "CastError" && error.kind === "ObjectId") {
       return res.status(400).json({ message: "Invalid post ID" });
     }
-    res.status(500).json({ message: message.error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -82,7 +80,7 @@ const deletePost = async (req, res) => {
     if (error.name === "CastError" && error.kind === "ObjectId") {
       return res.status(400).json({ message: "Invalid post ID" });
     }
-    res.status(500).json({ message: message.error });
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -5,6 +5,11 @@ import connectDB from "./config/db.js";
 import Post from "./model/postModel.js";
 import postRoutes from "./routes/postRoutes.js"
 
+import Yaml from "yamljs"
+import swaggerUI from "swagger-ui-express"
+const yamlFilePath = "./src/api.yaml"
+const swaggerJSDocs = Yaml.load(yamlFilePath)
+
 dotenv.config();
 connectDB()
 
@@ -19,6 +24,7 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", postRoutes)
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerJSDocs))
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello world...</h1>");
