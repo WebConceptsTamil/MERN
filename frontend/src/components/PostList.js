@@ -17,7 +17,7 @@ function PostList() {
   const getPosts = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:5000/api/posts");
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts`);
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -34,7 +34,7 @@ function PostList() {
     }
     try {
       const response = await fetch(
-        `http://localhost:5000/api/deletepost/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/deletepost/${id}`,
         { method: "DELETE" }
       );
       if (response.ok) {

@@ -28,7 +28,7 @@ function UpdatePost({ id }) {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/updatepost/${postid}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/updatepost/${postid}`,
         {
           method: "PUT",
           headers: {
@@ -51,7 +51,7 @@ function UpdatePost({ id }) {
 
   const getSinglePost = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/post/${postid}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/post/${postid}`);
       const data = await response.json();
       const { post } = data;
       setTitle(post.title);
@@ -61,7 +61,7 @@ function UpdatePost({ id }) {
 
   useEffect(() => {
     getSinglePost();
-  }, []);
+  });
   return (
     <>
       <Container className="mt-5">
