@@ -60,8 +60,10 @@ function UpdatePost({ id }) {
   };
 
   useEffect(() => {
+    console.log("TEST");
     getSinglePost();
-  });
+  }, []);
+
   return (
     <>
       <Container className="mt-5">
